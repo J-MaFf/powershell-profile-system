@@ -13,15 +13,42 @@ A simple, git-based PowerShell profile management system with 1Password CLI inte
 
 ## 🚀 Quick Start
 
-### New Computer Setup (One Command!)
+### New Computer Setup
 
-On any new computer, just run this single command:
+**Method 1: Git Clone (Recommended)**
+
+```powershell
+# Clone the repository
+git clone https://github.com/J-MaFf/powershell-profile-system.git
+cd powershell-profile-system
+
+# Run setup
+.\Setup.ps1
+```
+
+**Method 2: Download and Run (If antivirus blocks one-liner)**
+
+```powershell
+# Download setup script first
+Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -OutFile "setup-temp.ps1"
+
+# Review the script (optional but recommended)
+Get-Content setup-temp.ps1
+
+# Run setup
+.\setup-temp.ps1
+
+# Clean up
+Remove-Item setup-temp.ps1
+```
+
+**Method 3: One-liner (May be blocked by antivirus)**
 
 ```powershell
 iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content
 ```
 
-**What this does:**
+**What setup does:**
 - 🔄 Clones your profile repo to `~/.config/powershell-profile`
 - 📁 Backs up any existing PowerShell profile
 - ⚙️ Installs the new git-based profile loader
@@ -33,7 +60,7 @@ iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/mai
 - **VS Code**: Silent loading (no interference with extension)
 - **Manual updates**: `cd ~/.config/powershell-profile && git pull`
 
-### Manual Installation (Alternative)
+### Manual Installation (Step-by-step)
 
 ```powershell
 git clone https://github.com/J-MaFf/powershell-profile-system.git
@@ -139,7 +166,13 @@ git pull
 
 ### Force Reinstall
 ```powershell
-iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content -Force
+# If using git clone method
+.\Setup.ps1 -Force
+
+# If using download method  
+Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -OutFile "setup-temp.ps1"
+.\setup-temp.ps1 -Force
+Remove-Item setup-temp.ps1
 ```
 
 ## 🎯 Use Cases
@@ -170,6 +203,26 @@ Use-ServiceAccount -Token $env:OP_SERVICE_ACCOUNT_TOKEN
 - **Internet connection** (for initial setup and updates)
 
 ## 🔧 Troubleshooting
+
+### Antivirus Blocking Script Downloads
+If you get "This script contains malicious content and has been blocked by your antivirus software":
+
+**Solution 1: Use Git Clone Method (Recommended)**
+```powershell
+git clone https://github.com/J-MaFf/powershell-profile-system.git
+cd powershell-profile-system
+.\Setup.ps1
+```
+
+**Solution 2: Download First, Then Execute**
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -OutFile "setup.ps1"
+.\setup.ps1
+```
+
+**Solution 3: Add Windows Defender Exception**
+- Open Windows Security → Virus & threat protection
+- Add exclusion for PowerShell.exe or the specific URL
 
 ### VS Code Extension Issues
 The profile automatically detects VS Code and uses silent loading to prevent extension interference.
