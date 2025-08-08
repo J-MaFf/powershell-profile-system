@@ -65,7 +65,7 @@ function Use-RegularAccount {
                 Write-Host 'Regular user authentication verified' -ForegroundColor Green
                 Write-Host "Available accounts: $($accounts.Count)" -ForegroundColor Cyan
             } else {
-                Write-Host 'No accounts found. Try: op signin' -ForegroundColor Orange
+                Write-Host 'No accounts found. Try: op signin' -ForegroundColor Yellow
             }
         }
 

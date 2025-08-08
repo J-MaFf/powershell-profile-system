@@ -21,7 +21,7 @@ try {
             Write-Host "Removing existing installation..." -ForegroundColor Yellow
             Remove-Item $InstallPath -Recurse -Force
         } else {
-            Write-Host "Profile already installed at $InstallPath" -ForegroundColor Orange
+            Write-Host "Profile already installed at $InstallPath" -ForegroundColor Yellow
             Write-Host "Use -Force to reinstall" -ForegroundColor Yellow
             return
         }
