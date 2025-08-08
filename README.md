@@ -76,7 +76,7 @@ Get-1PasswordMode
 ```
 ~/.config/powershell-profile/
 ├── PSProfile.ps1          # Core functions and profile logic
-├── Setup-Clean.ps1        # Installation script
+├── Setup.ps1              # Installation script
 ├── README.md              # This file
 └── .git/                  # Git repository data
 ```
