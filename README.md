@@ -15,7 +15,13 @@ A simple, git-based PowerShell profile management system with 1Password CLI inte
 
 ### New Computer Setup
 
-**Method 1: Git Clone (Recommended)**
+**Method 1: One-liner (Fastest)**
+
+```powershell
+iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content
+```
+
+**Method 2: Git Clone (If antivirus blocks one-liner)**
 
 ```powershell
 # Clone the repository
@@ -26,7 +32,7 @@ cd powershell-profile-system
 .\Setup.ps1
 ```
 
-**Method 2: Download and Run (If antivirus blocks one-liner)**
+**Method 3: Download and Run (Alternative for restricted environments)**
 
 ```powershell
 # Download setup script first
@@ -42,12 +48,6 @@ Get-Content setup-temp.ps1
 Remove-Item setup-temp.ps1
 ```
 
-**Method 3: One-liner (May be blocked by antivirus)**
-
-```powershell
-iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content
-```
-
 **What setup does:**
 - 🔄 Clones your profile repo to `~/.config/powershell-profile`
 - 📁 Backs up any existing PowerShell profile
@@ -55,7 +55,7 @@ iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/mai
 - ✅ Configures automatic updates on PowerShell startup
 - 🎯 Makes all functions immediately available (`Use-ServiceAccount`, etc.)
 
-**From then on:**
+**All methods enable autonomous updates:**
 - **Console PowerShell**: Auto-updates every startup + shows loading messages
 - **VS Code**: Silent loading (no interference with extension)
 - **Manual updates**: `cd ~/.config/powershell-profile && git pull`
