@@ -16,7 +16,7 @@ A simple, git-based PowerShell profile management system with 1Password CLI inte
 ### One-Line Installation
 
 ```powershell
-iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup-Clean.ps1" -UseBasicParsing).Content
+iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content
 ```
 
 ### Manual Installation
@@ -24,7 +24,7 @@ iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/mai
 ```powershell
 git clone https://github.com/J-MaFf/powershell-profile-system.git
 cd powershell-profile-system
-.\Setup-Clean.ps1
+.\Setup.ps1
 ```
 
 ## 📚 Available Functions
@@ -125,7 +125,7 @@ git pull
 
 ### Force Reinstall
 ```powershell
-iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup-Clean.ps1" -UseBasicParsing).Content -Force
+iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content -Force
 ```
 
 ## 🎯 Use Cases
