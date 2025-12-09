@@ -10,6 +10,7 @@ A simple, git-based PowerShell profile management system with 1Password CLI inte
 - **🔐 1Password integration**: Seamless switching between service account and user modes
 - **📱 Offline capable**: Works without internet after initial setup
 - **🛠️ Simple architecture**: Clean, maintainable code without complex abstractions
+- **🧠 Memory MCP integration**: Workspace-local knowledge graph storage for AI assistance ([setup guide](MEMORY_MCP_SERVER_SETUP.md))
 
 ## 🚀 Quick Start
 
@@ -201,6 +202,21 @@ Use-ServiceAccount -Token $env:OP_SERVICE_ACCOUNT_TOKEN
 - **Git** (for updates and installation)
 - **1Password CLI** (optional, for 1Password functions)
 - **Internet connection** (for initial setup and updates)
+
+## 🧠 Memory MCP Server Setup
+
+This repository includes workspace-local Memory MCP server configuration for AI assistance with persistent knowledge graphs.
+
+**Quick Setup:**
+1. ✅ Configuration files are already in place (`.vscode/mcp.json`)
+2. ⚠️ **Manual step required:** Remove Memory server from your global MCP config
+3. 🔄 Restart VS Code to apply changes
+
+**📖 Full Documentation:** See [MEMORY_MCP_SERVER_SETUP.md](MEMORY_MCP_SERVER_SETUP.md) for:
+- Step-by-step removal of global Memory server configuration
+- How workspace-local storage works
+- Benefits and troubleshooting
+- Configuration reference
 
 ## 🔧 Troubleshooting
 
