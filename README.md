@@ -209,7 +209,7 @@ This repository includes workspace-local Memory MCP server configuration for AI 
 
 **Quick Setup:**
 1. ✅ Configuration files are already in place (`.vscode/mcp.json`)
-2. ⚠️ **Manual step required:** Remove Memory server from your global MCP config
+2. ⚠️ **Manual step required:** Remove Memory server from your global MCP config (`~/.vscode/User/profiles/[profile]/mcp.json`)
 3. 🔄 Restart VS Code to apply changes
 
 **📖 Full Documentation:** See [MEMORY_MCP_SERVER_SETUP.md](MEMORY_MCP_SERVER_SETUP.md) for:
