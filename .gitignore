@@ -21,5 +21,5 @@ node_modules/
 *.swo
 *~
 
-# Note: knowledge-graph.json is intentionally NOT ignored
+# Note: knowledge-graph.jsonl is intentionally NOT ignored
 # It will be tracked in Git for backup and sync purposes
