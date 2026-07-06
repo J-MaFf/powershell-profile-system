@@ -22,7 +22,7 @@ Working profile system; Windows CI added to validate every change on the self-ho
 
 | Issue | Description | PR |
 | --- | --- | --- |
-| [#8](https://github.com/J-MaFf/powershell-profile-system/issues/8) | Add Windows CI (validate modules + profile smoke test) on the self-hosted runner | (PR pending) |
+| [#8](https://github.com/J-MaFf/powershell-profile-system/issues/8) | Add Windows CI (validate modules + profile smoke test) on the self-hosted runner | [#9](https://github.com/J-MaFf/powershell-profile-system/pull/9) |
 
 ### Open Issues
 
