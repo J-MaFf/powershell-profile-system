@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `claude.yml` and the Windows lint steps in `windows-tests.yml` now call the shared reusable workflows in [J-MaFf/.github](https://github.com/J-MaFf/.github) instead of carrying their own copies; `windows-tests.yml` now has a `lint` job (shared ps-lint caller) plus a local `validate` job keeping the module-manifest validation and `PSProfile.ps1` smoke test ([#11](https://github.com/J-MaFf/powershell-profile-system/pull/11))
+
 ### Added
 
 - Added Windows CI workflow (`windows-tests.yml`) on the self-hosted runner: parse check for all `.ps1`/`.psm1` files, PSScriptAnalyzer (fails on Error severity only), `Test-ModuleManifest` + `Import-Module` for both module manifests, and a `PSProfile.ps1` dot-source smoke test in a fresh `pwsh -NoProfile` process ([#9](https://github.com/J-MaFf/powershell-profile-system/pull/9))
