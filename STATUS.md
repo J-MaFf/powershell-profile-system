@@ -6,7 +6,7 @@ A PowerShell profile management system: a core profile (`PSProfile.ps1`) with 1P
 
 ## Current State — 2026-10-10
 
-Working profile system; Windows CI validates every change on the self-hosted runner. The move from `git pull` on every start to release-based updates is in review ([#13](https://github.com/J-MaFf/powershell-profile-system/issues/13)); there is no release yet, so a release-based install cannot happen until the first tag (`v1.0.0`) once it merges. Existing git-based installs keep pulling `main` until they are reinstalled with `Setup.ps1 -Force`.
+Working profile system; Windows CI validates every change on the self-hosted runner. Installs update from tagged releases instead of `git pull` on every start ([#13](https://github.com/J-MaFf/powershell-profile-system/issues/13), [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14)); `v1.0.0` is the first release. Existing git-based installs keep pulling `main` until they are reinstalled with `Setup.ps1 -Force`.
 
 ### Components
 
@@ -28,16 +28,16 @@ Working profile system; Windows CI validates every change on the self-hosted run
 | --- | --- | --- |
 | [#8](https://github.com/J-MaFf/powershell-profile-system/issues/8) | Add Windows CI (validate modules + profile smoke test) on the self-hosted runner | [#9](https://github.com/J-MaFf/powershell-profile-system/pull/9) |
 | [#10](https://github.com/J-MaFf/powershell-profile-system/issues/10) | Adopt shared reusable workflows (`claude.yml`, `ps-lint.yml`) from J-MaFf/.github | [#11](https://github.com/J-MaFf/powershell-profile-system/pull/11) |
+| [#13](https://github.com/J-MaFf/powershell-profile-system/issues/13) | Update from attested releases instead of git pull on every start | [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14) |
 
 ### Open Issues
 
-| Issue | Description |
-| --- | --- |
-| [#13](https://github.com/J-MaFf/powershell-profile-system/issues/13) | Update from attested releases instead of git pull on every start |
+None.
 
 ## Natural Next Steps
 
-- After #13 merges (and J-MaFf/release-kit has released `v1.1.0` with the updater): move the `[Unreleased]` entries under `[1.0.0]`, tag `v1.0.0`, then reinstall each machine with `Setup.ps1 -Force` to move it off `git pull`.
+- Reinstall each machine with `Setup.ps1 -Force` (README "Moving an existing git-based install to releases") to move it off `git pull` onto releases.
+- When J-MaFf/release-kit releases a newer updater, copy its `Update-FromGitHubRelease.ps1` asset over `tools/Update-FromGitHubRelease.ps1` and release.
 - Add Pester tests for the module functions (CI tests only the update check today)
 - Fix the `$IsVSCode` referenced-before-assignment warning in `PSProfile.ps1` flagged by PSScriptAnalyzer
 - Add a `required_status_checks` rule for the Windows Tests workflow once it has a track record
