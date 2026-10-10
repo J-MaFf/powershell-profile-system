@@ -1,10 +1,10 @@
 # PowerShell Profile System
 
-A simple, git-based PowerShell profile management system with 1Password CLI integration and VS Code extension compatibility.
+A simple PowerShell profile management system with 1Password CLI integration and VS Code extension compatibility, kept up to date from checked GitHub releases.
 
 ## ✨ Features
 
-- **🚀 Git-based updates**: No API calls, just `git pull` for reliable updates
+- **🚀 Release-based updates**: Installs pick up new tagged releases at most once a day; every file is checked against the release's SHA-256 manifest before it replaces anything ([J-MaFf/release-kit](https://github.com/J-MaFf/release-kit))
 - **⚡ Fast startup**: Local files, minimal overhead, instant loading
 - **🎨 VS Code compatible**: Silent loading in PowerShell extension without interference
 - **🔐 1Password integration**: Seamless switching between service account and user modes
@@ -19,25 +19,16 @@ A simple, git-based PowerShell profile management system with 1Password CLI inte
 **Method 1: One-liner (Fastest)**
 
 ```powershell
-iex (iwr "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -UseBasicParsing).Content
+$s = Join-Path $env:TEMP 'profile-setup.ps1'; iwr "https://github.com/J-MaFf/powershell-profile-system/releases/latest/download/Setup.ps1" -OutFile $s -UseBasicParsing; & $s; Remove-Item $s
 ```
 
-**Method 2: Git Clone (If antivirus blocks one-liner)**
+(GitHub serves release files as binary, so `iex (iwr ...).Content` would hand `iex` bytes, not text: the one-liner saves the file and runs it.)
 
-```powershell
-# Clone the repository
-git clone https://github.com/J-MaFf/powershell-profile-system.git
-cd powershell-profile-system
-
-# Run setup
-.\Setup.ps1
-```
-
-**Method 3: Download and Run (Alternative for restricted environments)**
+**Method 2: Download and Run (If antivirus blocks the one-liner)**
 
 ```powershell
 # Download setup script first
-Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -OutFile "setup-temp.ps1"
+Invoke-WebRequest "https://github.com/J-MaFf/powershell-profile-system/releases/latest/download/Setup.ps1" -OutFile "setup-temp.ps1"
 
 # Review the script (optional but recommended)
 Get-Content setup-temp.ps1
@@ -49,25 +40,27 @@ Get-Content setup-temp.ps1
 Remove-Item setup-temp.ps1
 ```
 
-**What setup does:**
-- 🔄 Clones your profile repo to `~/.config/powershell-profile`
-- 📁 Backs up any existing PowerShell profile
-- ⚙️ Installs the new git-based profile loader
-- ✅ Configures automatic updates on PowerShell startup
-- 🎯 Makes all functions immediately available (`Use-ServiceAccount`, etc.)
-
-**All methods enable autonomous updates:**
-- **Console PowerShell**: Auto-updates every startup + shows loading messages
-- **VS Code**: Silent loading (no interference with extension)
-- **Manual updates**: `cd ~/.config/powershell-profile && git pull`
-
-### Manual Installation (Step-by-step)
+**Method 3: Git Clone (A machine you develop the profile on)**
 
 ```powershell
 git clone https://github.com/J-MaFf/powershell-profile-system.git
 cd powershell-profile-system
-.\Setup.ps1
+.\Setup.ps1 -Git
 ```
+
+A `-Git` install is a clone you update yourself with `git pull`; it never updates from releases.
+
+**What setup does:**
+- 📦 Installs the latest release to `~/.config/powershell-profile`: it downloads the release's updater, checks it against the release manifest's SHA-256 before running it, and lets it install every file, each checked the same way (no git needed)
+- 📁 Backs up any existing PowerShell profile
+- ⚙️ Installs the profile loader into `$PROFILE`
+- ✅ Configures automatic updates, at most once a day
+- 🎯 Makes all functions immediately available (`Use-ServiceAccount`, etc.)
+
+**Updates:**
+- **Console PowerShell**: checks for a new release at most once a day, and prints a line only when it updated something or the check failed
+- **VS Code**: Silent loading, no update check (no interference with extension)
+- **Manual check**: `& ~/.config/powershell-profile/Update-ProfileSystem.ps1 -Force`
 
 ## 📚 Available Functions
 
@@ -106,21 +99,23 @@ Get-1PasswordMode
 
 ### Architecture Overview
 
-1. **Setup**: Clones this repository to `~/.config/powershell-profile`
-2. **Profile Loading**: Your PowerShell profile automatically:
-   - Runs `git pull` to check for updates (console only)
+1. **Setup**: Installs the latest release to `~/.config/powershell-profile` (or clones the repository with `-Git`)
+2. **Profile Loading**: Your PowerShell profile:
+   - Runs `Update-ProfileSystem.ps1`, which checks for a new release at most once a day (console only)
    - Dot-sources `PSProfile.ps1` to load functions
-3. **VS Code Optimization**: Skips git operations for faster extension loading
-4. **Updates**: Automatic on PowerShell startup, or manual via `git pull`
+3. **VS Code Optimization**: Skips the update check for faster extension loading
+4. **Updates**: `tools/Update-FromGitHubRelease.ps1` (from [J-MaFf/release-kit](https://github.com/J-MaFf/release-kit)) compares every file of the newest release with the installed one by SHA-256, downloads only those that differ, checks each, and replaces them together. A failed check (offline, GitHub down) keeps the files you have and tries again the next day.
 
 ### File Structure
 
 ```
 ~/.config/powershell-profile/
-├── PSProfile.ps1          # Core functions and profile logic
-├── Setup.ps1              # Installation script
-├── README.md              # This file
-└── .git/                  # Git repository data
+├── PSProfile.ps1                       # Core functions and profile logic
+├── Update-ProfileSystem.ps1            # Daily update check, run by $PROFILE
+├── Setup.ps1                           # Installation script
+├── tools/Update-FromGitHubRelease.ps1  # The updater, from J-MaFf/release-kit
+├── modules/                            # ActiveDirectoryUtils, PersonalUtils
+└── .update-state.json                  # When it last checked (not in releases)
 ```
 
 ### Profile Integration
@@ -128,24 +123,12 @@ Get-1PasswordMode
 The setup script creates/updates your PowerShell profile with this simple loader:
 
 ```powershell
-# PowerShell Profile System - Git Based
+# PowerShell Profile System
 $ProfileRepo = 'C:\Users\{username}\.config\powershell-profile'
 
-# Update profile repo (skip in VS Code for speed)  
-if (-not ($null -ne $psEditor -or $env:TERM_PROGRAM -eq "vscode")) {
-    if (Test-Path $ProfileRepo) {
-        Push-Location $ProfileRepo
-        try {
-            git fetch --quiet 2>$null
-            $behind = git rev-list --count HEAD..origin/main 2>$null
-            if ($behind -and $behind -gt 0) {
-                git pull origin main --quiet 2>$null
-            }
-        } catch {
-            # Ignore git errors
-        }
-        Pop-Location
-    }
+# Update from the newest release at most once a day (skipped in VS Code and in a git clone).
+if (Test-Path "$ProfileRepo\Update-ProfileSystem.ps1") {
+    & "$ProfileRepo\Update-ProfileSystem.ps1" -InstallPath $ProfileRepo
 }
 
 # Load the profile
@@ -154,26 +137,42 @@ if (Test-Path "$ProfileRepo\PSProfile.ps1") {
 }
 ```
 
+The update logic lives in `Update-ProfileSystem.ps1`, which every release ships, so this stub never needs to change.
+
 ## 🔄 Updating
 
 ### Automatic Updates
-The profile checks for updates every time you start PowerShell (console mode only).
+The profile checks for a new release at most once a day (console mode only). Set `PSPROFILE_NO_UPDATE=1` to turn the check off.
 
 ### Manual Updates
 ```powershell
-cd ~/.config/powershell-profile
-git pull
+& "$env:USERPROFILE\.config\powershell-profile\Update-ProfileSystem.ps1" -Force
 ```
+
+For a `-Git` install: `cd ~/.config/powershell-profile; git pull`.
 
 ### Force Reinstall
 ```powershell
-# If using git clone method
-.\Setup.ps1 -Force
-
-# If using download method  
-Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -OutFile "setup-temp.ps1"
+Invoke-WebRequest "https://github.com/J-MaFf/powershell-profile-system/releases/latest/download/Setup.ps1" -OutFile "setup-temp.ps1"
 .\setup-temp.ps1 -Force
 Remove-Item setup-temp.ps1
+```
+
+`-Force` downloads and checks the new release before it removes the old installation.
+
+### Moving an existing git-based install to releases
+Installs made before releases are git clones whose `$PROFILE` runs `git pull`; they keep working as before. To switch one to releases, run `Setup.ps1 -Force` as above.
+
+### Publishing a release (maintainers)
+1. Move the `[Unreleased]` entries in `CHANGELOG.md` under `## [X.Y.Z] - YYYY-MM-DD` and merge that.
+2. Tag the merge commit on `main` and push the tag: `git tag vX.Y.Z <commit> && git push origin vX.Y.Z`.
+
+`.github/workflows/release.yml` then publishes the files listed in it, a `release-manifest.json` and an attestation for each, through `J-MaFf/release-kit`. A new file the profile needs must be added to that list. When release-kit releases a newer updater, copy its `Update-FromGitHubRelease.ps1` asset over `tools/Update-FromGitHubRelease.ps1`.
+
+To check a release file yourself:
+```powershell
+gh attestation verify PSProfile.ps1 --repo J-MaFf/powershell-profile-system `
+    --signer-workflow J-MaFf/release-kit/.github/workflows/release.yml
 ```
 
 ## 🎯 Use Cases
@@ -199,7 +198,7 @@ Use-ServiceAccount -Token $env:OP_SERVICE_ACCOUNT_TOKEN
 ## 🛠️ Requirements
 
 - **PowerShell 5.1+** or **PowerShell 7+**
-- **Git** (for updates and installation)
+- **Git** only for a `-Git` install
 - **1Password CLI** (optional, for 1Password functions)
 - **Internet connection** (for initial setup and updates)
 
@@ -223,17 +222,17 @@ This repository includes workspace-local Memory MCP server configuration for AI 
 ### Antivirus Blocking Script Downloads
 If you get "This script contains malicious content and has been blocked by your antivirus software":
 
-**Solution 1: Use Git Clone Method (Recommended)**
+**Solution 1: Download First, Then Execute**
+```powershell
+Invoke-WebRequest "https://github.com/J-MaFf/powershell-profile-system/releases/latest/download/Setup.ps1" -OutFile "setup.ps1"
+.\setup.ps1
+```
+
+**Solution 2: Use Git Clone Method**
 ```powershell
 git clone https://github.com/J-MaFf/powershell-profile-system.git
 cd powershell-profile-system
-.\Setup.ps1
-```
-
-**Solution 2: Download First, Then Execute**
-```powershell
-Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-system/main/Setup.ps1" -OutFile "setup.ps1"
-.\setup.ps1
+.\Setup.ps1 -Git
 ```
 
 **Solution 3: Add Windows Defender Exception**
@@ -243,14 +242,14 @@ Invoke-WebRequest "https://raw.githubusercontent.com/J-MaFf/powershell-profile-s
 ### VS Code Extension Issues
 The profile automatically detects VS Code and uses silent loading to prevent extension interference.
 
-### Git Authentication
-If you have git authentication issues, the profile will gracefully fall back to the cached version.
+### Update Check Failed
+A line like `Profile system: update check failed (...)` means it could not reach GitHub or a download did not match the manifest. Your installed files are untouched; it tries again the next day, or run `Update-ProfileSystem.ps1 -Force`.
 
 ### 1Password CLI Not Found
 The functions will display helpful error messages if 1Password CLI is not installed.
 
 ### Profile Not Loading
-Check that the repository exists:
+Check that the installation exists:
 ```powershell
 Test-Path "$env:USERPROFILE\.config\powershell-profile\PSProfile.ps1"
 ```
@@ -261,28 +260,27 @@ If you're upgrading from an older gist-based profile system:
 
 1. The setup script automatically backs up your existing profile
 2. Your functions remain the same - just the loading mechanism changes
-3. Enjoy faster, more reliable updates with git!
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly in both console and VS Code
+4. Test thoroughly in both console and VS Code (`Invoke-Pester tests` covers the update check)
 5. Submit a pull request
 
 ## 📝 Architecture Benefits
 
-### Why Git Over Gist API?
+### Why Releases Over `git pull`?
 
-| Feature | Git-Based | Gist API |
-|---------|-----------|----------|
-| **Speed** | ⚡ Instant (local files) | 🐌 Network dependent |
-| **Reliability** | 🟢 Always works offline | 🔴 Fails without internet |
-| **Rate Limits** | ✅ None | ❌ 60 requests/hour |
-| **Version Control** | ✅ Full git history | ❌ Limited versioning |
-| **Branching** | ✅ Test branches | ❌ Single version |
-| **CI/CD** | ✅ Automated testing | ❌ Manual process |
+| Feature | Releases | `git pull` on every start |
+|---------|----------|---------------------------|
+| **What reaches machines** | ✅ Only tagged releases | ❌ Whatever is on `main` |
+| **Integrity** | ✅ SHA-256 per file, attestations | ❌ Nothing checked |
+| **Needs git** | ✅ No | ❌ Yes |
+| **Startup cost** | ⚡ One check a day | 🐌 A fetch every start |
+| **Offline** | 🟢 Keeps working | 🟢 Keeps working |
+| **Rate limits** | ✅ One API call a day, well inside 60/hour | ✅ None |
 
 ### Design Principles
 
