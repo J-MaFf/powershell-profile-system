@@ -1,0 +1,37 @@
+name: Release
+
+# Publishes a release from a vX.Y.Z tag through J-MaFf/release-kit's shared workflow: the files an
+# install needs, a release-manifest.json pinning each by SHA-256 and size, and a build-provenance
+# attestation for each. Installed machines pick it up through Update-ProfileSystem.ps1, at most once
+# a day, and Setup.ps1 installs from it.
+#
+# To release: move CHANGELOG.md's [Unreleased] entries under "## [X.Y.Z] - YYYY-MM-DD", merge that,
+# then tag the merge commit on main: git tag vX.Y.Z <commit> && git push origin vX.Y.Z
+#
+# A file the profile needs at run time must be listed here, or installs never get it. Each is
+# published under its file name, so two files may not share one.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    uses: J-MaFf/release-kit/.github/workflows/release.yml@v1
+    with:
+      files: |
+        PSProfile.ps1
+        Update-ProfileSystem.ps1
+        Setup.ps1
+        tools/Update-FromGitHubRelease.ps1
+        modules/ActiveDirectoryUtils/ActiveDirectoryUtils.psd1
+        modules/ActiveDirectoryUtils/ActiveDirectoryUtils.psm1
+        modules/PersonalUtils/PersonalUtils.psd1
+        modules/PersonalUtils/PersonalUtils.psm1
