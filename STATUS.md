@@ -18,6 +18,7 @@ Working profile system; Windows CI validates every change on the self-hosted run
 | `Setup.ps1` | New-machine installer: installs the latest release (default; checks the updater against the manifest first) or clones with `-Git`, and overwrites `$PROFILE` (never run in CI) |
 | `modules/ActiveDirectoryUtils/` | AD helper module (`Get-ADUserInfo`, `Get-ADGroupMembers`, `Test-ADConnection`) |
 | `modules/PersonalUtils/` | Personal utility module (`Get-SystemInfo`, `Start-ElevatedProcess`, `Test-Port`) |
+| `docs/ps-cheat-sheet.md` | PowerShell quick reference (docs only; not part of a release install) |
 | `tests/Update-ProfileSystem.Tests.ps1` | Pester tests of the update check with a stand-in updater (no network) |
 | `.github/workflows/release.yml` | On a `vX.Y.Z` tag, publishes the install's files, `release-manifest.json` and attestations through `J-MaFf/release-kit/.github/workflows/release.yml@v1` |
 | `.github/workflows/windows-tests.yml` | CI: a `lint` job calling the shared reusable `ps-lint.yml` in [J-MaFf/.github](https://github.com/J-MaFf/.github), a `pester` job on ubuntu, and a local `validate` job on the self-hosted runner (manifest validation + import, profile smoke test) |
