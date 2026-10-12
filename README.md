@@ -95,6 +95,10 @@ Get-1PasswordMode
 💡 Switch to service: Use-ServiceAccount
 ```
 
+## 📖 Reference
+
+- [PowerShell cheat sheet](docs/ps-cheat-sheet.md): everyday cmdlets and shortcuts.
+
 ## 🏗️ How It Works
 
 ### Architecture Overview

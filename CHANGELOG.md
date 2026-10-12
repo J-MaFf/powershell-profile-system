@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `docs/ps-cheat-sheet.md`: an everyday PowerShell quick reference, moved here from a loose local folder and linked from the README's new Reference section ([#19](https://github.com/J-MaFf/powershell-profile-system/issues/19)).
+
 - merge-gate caller (`.github/workflows/merge-gate.yml`): the required check that keeps the claude-sandbox App from merging its own PRs; logic in the reusable J-MaFf/.github merge-gate.yml.
 
 ## [1.0.0] - 2026-10-10
