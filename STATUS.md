@@ -6,7 +6,7 @@ A PowerShell profile management system: a core profile (`PSProfile.ps1`) with 1P
 
 ## Current State — 2026-11-11
 
-Working profile system; Windows CI validates every change on the self-hosted runner. Installs update from tagged releases instead of `git pull` on every start ([#13](https://github.com/J-MaFf/powershell-profile-system/issues/13), [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14)); `v1.0.0` is the first release. Existing git-based installs keep pulling `main` until they are reinstalled with `Setup.ps1 -Force`.
+Working profile system; Windows CI validates every change on the self-hosted runner. Installs update from tagged releases instead of `git pull` on every start ([#13](https://github.com/J-MaFf/powershell-profile-system/issues/13), [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14)); `v1.0.0` is the first release; `v1.0.1` moves the `Use-ServiceAccount` token reference into `PSPROFILE_OP_SERVICE_TOKEN_REF`. Existing git-based installs keep pulling `main` until they are reinstalled with `Setup.ps1 -Force`.
 
 ### Components
 
@@ -38,7 +38,7 @@ None.
 
 ## Natural Next Steps
 
-- After #21 merges, set `PSPROFILE_OP_SERVICE_TOKEN_REF` on each machine that uses `Use-ServiceAccount`, and cut `v1.0.1`.
+- Set `PSPROFILE_OP_SERVICE_TOKEN_REF` on each machine that uses `Use-ServiceAccount` (v1.0.1 needs it).
 - Reinstall each machine with `Setup.ps1 -Force` (README "Moving an existing git-based install to releases") to move it off `git pull` onto releases.
 - When J-MaFf/release-kit releases a newer updater, copy its `Update-FromGitHubRelease.ps1` asset over `tools/Update-FromGitHubRelease.ps1` and release.
 - Add Pester tests for the module functions (CI tests only the update check today)
