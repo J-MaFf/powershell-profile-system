@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `Use-ServiceAccount` now reads the 1Password reference for the service account token from the `PSPROFILE_OP_SERVICE_TOKEN_REF` environment variable instead of a hard-coded `op://` path, and stops with a clear message when it is unset. Machines that call `Use-ServiceAccount` without `-Token` must set the variable ([#16](https://github.com/J-MaFf/powershell-profile-system/issues/16)).
+
 ### Added
 
 - `docs/ps-cheat-sheet.md`: an everyday PowerShell quick reference, moved here from a loose local folder and linked from the README's new Reference section ([#19](https://github.com/J-MaFf/powershell-profile-system/issues/19)).
