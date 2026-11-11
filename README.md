@@ -72,6 +72,8 @@ Use-ServiceAccount                    # Retrieves token from 1Password vault
 Use-ServiceAccount -Token "ops_..."   # Uses provided token directly
 ```
 
+Without `-Token`, the token is read from the 1Password reference in the `PSPROFILE_OP_SERVICE_TOKEN_REF` environment variable. Set it once per machine (for example in your user environment variables) to the full `op://<vault>/<item>/credential` reference of your service account token. The reference isn't stored in this repo; if the variable is unset, `Use-ServiceAccount` stops with a message saying so.
+
 ### `Use-RegularAccount`
 Switches back to regular 1Password user authentication for interactive use.
 

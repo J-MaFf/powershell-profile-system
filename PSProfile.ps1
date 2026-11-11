@@ -11,15 +11,21 @@ function Use-ServiceAccount {
         }
 
         if ([string]::IsNullOrWhiteSpace($Token)) {
+            # The op:// reference is machine-local config, not tracked in this public repo.
+            $tokenRef = $env:PSPROFILE_OP_SERVICE_TOKEN_REF
+            if ([string]::IsNullOrWhiteSpace($tokenRef)) {
+                throw 'PSPROFILE_OP_SERVICE_TOKEN_REF is not set. Set it to the full op:// reference of the service account token (for example op://<vault>/<item>/credential), or pass -Token.'
+            }
+
             Write-Host 'Retrieving service account token from 1Password...' -ForegroundColor Cyan
-            
+
             $tempToken = $env:OP_SERVICE_ACCOUNT_TOKEN
             if ($tempToken) {
                 Remove-Item env:OP_SERVICE_ACCOUNT_TOKEN -ErrorAction SilentlyContinue
             }
 
             try {
-                $Token = op read 'op://Home Server/nudybdh43mxz6f4z4bhmllhxau/credential' 2>$null
+                $Token = op read $tokenRef 2>$null
                 
                 if ([string]::IsNullOrWhiteSpace($Token)) {
                     throw 'Service account token not found in 1Password'
