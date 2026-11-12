@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-12
+
 ### Removed
 
 - The 1Password mode-switching functions `Use-ServiceAccount`, `Use-RegularAccount` and `Get-1PasswordMode`, the `PSPROFILE_OP_SERVICE_TOKEN_REF` variable they used, and their README sections and `Setup.ps1` hint ([#24](https://github.com/J-MaFf/powershell-profile-system/issues/24)). `op-secret` (the `1password-secrets` skill) resolves credentials from both the personal and work service accounts and replaces them.
