@@ -31,7 +31,7 @@ Working profile system; Windows CI validates every change on the self-hosted run
 | [#10](https://github.com/J-MaFf/powershell-profile-system/issues/10) | Adopt shared reusable workflows (`claude.yml`, `ps-lint.yml`) from J-MaFf/.github | [#11](https://github.com/J-MaFf/powershell-profile-system/pull/11) |
 | [#13](https://github.com/J-MaFf/powershell-profile-system/issues/13) | Update from attested releases instead of git pull on every start | [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14) |
 | [#16](https://github.com/J-MaFf/powershell-profile-system/issues/16) | Remove the hard-coded 1Password item ID from `PSProfile.ps1` (now `PSPROFILE_OP_SERVICE_TOKEN_REF`) | [#21](https://github.com/J-MaFf/powershell-profile-system/pull/21) |
-| [#24](https://github.com/J-MaFf/powershell-profile-system/issues/24) | Retire `Use-ServiceAccount`, `Use-RegularAccount`, `Get-1PasswordMode` and `PSPROFILE_OP_SERVICE_TOKEN_REF` (replaced by `op-secret`) | PR_PLACEHOLDER |
+| [#24](https://github.com/J-MaFf/powershell-profile-system/issues/24) | Retire `Use-ServiceAccount`, `Use-RegularAccount`, `Get-1PasswordMode` and `PSPROFILE_OP_SERVICE_TOKEN_REF` (replaced by `op-secret`) | [#25](https://github.com/J-MaFf/powershell-profile-system/pull/25) |
 
 ### Open Issues
 
