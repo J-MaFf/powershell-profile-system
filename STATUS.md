@@ -39,7 +39,7 @@ None.
 
 ## Natural Next Steps
 
-- Release the retirement of the 1Password functions as `v1.1.0` (removes `Use-ServiceAccount`, `Use-RegularAccount`, `Get-1PasswordMode` removed).
+- Release the retirement of the 1Password functions as `v1.1.0` (removes `Use-ServiceAccount`, `Use-RegularAccount` and `Get-1PasswordMode`).
 - Reinstall each machine with `Setup.ps1 -Force` (README "Moving an existing git-based install to releases") to move it off `git pull` onto releases.
 - When J-MaFf/release-kit releases a newer updater, copy its `Update-FromGitHubRelease.ps1` asset over `tools/Update-FromGitHubRelease.ps1` and release.
 - Add Pester tests for the module functions (CI tests only the update check today)
