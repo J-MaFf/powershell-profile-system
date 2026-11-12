@@ -65,7 +65,7 @@ A `-Git` install is a clone you update yourself with `git pull`; it never update
 
 The profile loads two modules from `modules/`: `ActiveDirectoryUtils` (`Get-ADUserInfo`, `Get-ADGroupMembers`, `Test-ADConnection`) and `PersonalUtils` (`Get-SystemInfo`, `Start-ElevatedProcess`, `Test-Port`).
 
-> **Removed in 2.0.0:** `Use-ServiceAccount`, `Use-RegularAccount` and `Get-1PasswordMode`, and the `PSPROFILE_OP_SERVICE_TOKEN_REF` variable. Resolve credentials with `op-secret` instead.
+> **Removed in 1.1.0:** `Use-ServiceAccount`, `Use-RegularAccount` and `Get-1PasswordMode`, and the `PSPROFILE_OP_SERVICE_TOKEN_REF` variable. Resolve credentials with `op-secret` instead.
 
 ## 📖 Reference
 
