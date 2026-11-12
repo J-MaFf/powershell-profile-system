@@ -2,17 +2,17 @@
 
 ## What This Is
 
-A PowerShell profile management system: a core profile (`PSProfile.ps1`) with 1Password CLI mode switching, two utility modules (ActiveDirectoryUtils, PersonalUtils), and a `Setup.ps1` installer that wires the profile into `$PROFILE` on a new machine. Installs update themselves from tagged GitHub releases, checked file by file against a SHA-256 manifest, through J-MaFf/release-kit's shared updater.
+A PowerShell profile management system: a core profile (`PSProfile.ps1`) that loads two utility modules (ActiveDirectoryUtils, PersonalUtils), and a `Setup.ps1` installer that wires the profile into `$PROFILE` on a new machine. Installs update themselves from tagged GitHub releases, checked file by file against a SHA-256 manifest, through J-MaFf/release-kit's shared updater.
 
-## Current State — 2026-11-11
+## Current State — 2026-11-12
 
-Working profile system; Windows CI validates every change on the self-hosted runner. Installs update from tagged releases instead of `git pull` on every start ([#13](https://github.com/J-MaFf/powershell-profile-system/issues/13), [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14)); `v1.0.0` is the first release; `v1.0.1` moves the `Use-ServiceAccount` token reference into `PSPROFILE_OP_SERVICE_TOKEN_REF`. Existing git-based installs keep pulling `main` until they are reinstalled with `Setup.ps1 -Force`.
+Working profile system; Windows CI validates every change on the self-hosted runner. Installs update from tagged releases instead of `git pull` on every start ([#13](https://github.com/J-MaFf/powershell-profile-system/issues/13), [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14)); `v1.0.0` is the first release; `v1.0.1` moved the `Use-ServiceAccount` token reference into `PSPROFILE_OP_SERVICE_TOKEN_REF`; the 1Password mode-switching functions are then retired on `main` (unreleased, 2.0.0). Existing git-based installs keep pulling `main` until they are reinstalled with `Setup.ps1 -Force`.
 
 ### Components
 
 | File | Description |
 | --- | --- |
-| `PSProfile.ps1` | Core profile: 1Password service/regular account switching, module auto-loading, VS Code-aware output |
+| `PSProfile.ps1` | Core profile: module auto-loading, VS Code-aware output |
 | `Update-ProfileSystem.ps1` | Run by `$PROFILE` before `PSProfile.ps1`: at most once a day (not in VS Code, not in a git clone, not with `PSPROFILE_NO_UPDATE`) updates the install from the newest release; never stops the profile loading; `-Force` checks now |
 | `tools/Update-FromGitHubRelease.ps1` | The updater, copied unchanged from [J-MaFf/release-kit](https://github.com/J-MaFf/release-kit): manifest, hash compare, checked downloads, swap with rollback |
 | `Setup.ps1` | New-machine installer: installs the latest release (default; checks the updater against the manifest first) or clones with `-Git`, and overwrites `$PROFILE` (never run in CI) |
@@ -31,6 +31,7 @@ Working profile system; Windows CI validates every change on the self-hosted run
 | [#10](https://github.com/J-MaFf/powershell-profile-system/issues/10) | Adopt shared reusable workflows (`claude.yml`, `ps-lint.yml`) from J-MaFf/.github | [#11](https://github.com/J-MaFf/powershell-profile-system/pull/11) |
 | [#13](https://github.com/J-MaFf/powershell-profile-system/issues/13) | Update from attested releases instead of git pull on every start | [#14](https://github.com/J-MaFf/powershell-profile-system/pull/14) |
 | [#16](https://github.com/J-MaFf/powershell-profile-system/issues/16) | Remove the hard-coded 1Password item ID from `PSProfile.ps1` (now `PSPROFILE_OP_SERVICE_TOKEN_REF`) | [#21](https://github.com/J-MaFf/powershell-profile-system/pull/21) |
+| [#24](https://github.com/J-MaFf/powershell-profile-system/issues/24) | Retire `Use-ServiceAccount`, `Use-RegularAccount`, `Get-1PasswordMode` and `PSPROFILE_OP_SERVICE_TOKEN_REF` (replaced by `op-secret`) | PR_PLACEHOLDER |
 
 ### Open Issues
 
@@ -38,7 +39,7 @@ None.
 
 ## Natural Next Steps
 
-- Set `PSPROFILE_OP_SERVICE_TOKEN_REF` on each machine that uses `Use-ServiceAccount` (v1.0.1 needs it).
+- Release the retirement of the 1Password functions as `v2.0.0` (breaking: `Use-ServiceAccount`, `Use-RegularAccount`, `Get-1PasswordMode` removed).
 - Reinstall each machine with `Setup.ps1 -Force` (README "Moving an existing git-based install to releases") to move it off `git pull` onto releases.
 - When J-MaFf/release-kit releases a newer updater, copy its `Update-FromGitHubRelease.ps1` asset over `tools/Update-FromGitHubRelease.ps1` and release.
 - Add Pester tests for the module functions (CI tests only the update check today)

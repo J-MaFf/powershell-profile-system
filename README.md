@@ -1,13 +1,12 @@
 # PowerShell Profile System
 
-A simple PowerShell profile management system with 1Password CLI integration and VS Code extension compatibility, kept up to date from checked GitHub releases.
+A simple PowerShell profile management system with VS Code extension compatibility, kept up to date from checked GitHub releases.
 
 ## ✨ Features
 
 - **🚀 Release-based updates**: Installs pick up new tagged releases at most once a day; every file is checked against the release's SHA-256 manifest before it replaces anything ([J-MaFf/release-kit](https://github.com/J-MaFf/release-kit))
 - **⚡ Fast startup**: Local files, minimal overhead, instant loading
 - **🎨 VS Code compatible**: Silent loading in PowerShell extension without interference
-- **🔐 1Password integration**: Seamless switching between service account and user modes
 - **📱 Offline capable**: Works without internet after initial setup
 - **🛠️ Simple architecture**: Clean, maintainable code without complex abstractions
 - **🧠 Memory MCP integration**: Workspace-local knowledge graph storage for AI assistance ([setup guide](MEMORY_MCP_SERVER_SETUP.md))
@@ -55,7 +54,7 @@ A `-Git` install is a clone you update yourself with `git pull`; it never update
 - 📁 Backs up any existing PowerShell profile
 - ⚙️ Installs the profile loader into `$PROFILE`
 - ✅ Configures automatic updates, at most once a day
-- 🎯 Makes all functions immediately available (`Use-ServiceAccount`, etc.)
+- 🎯 Makes the module functions immediately available (`Get-ADUserInfo`, etc.)
 
 **Updates:**
 - **Console PowerShell**: checks for a new release at most once a day, and prints a line only when it updated something or the check failed
@@ -64,38 +63,9 @@ A `-Git` install is a clone you update yourself with `git pull`; it never update
 
 ## 📚 Available Functions
 
-### `Use-ServiceAccount`
-Configures 1Password CLI to use service account token for automation and CI/CD scenarios.
+The profile loads two modules from `modules/`: `ActiveDirectoryUtils` (`Get-ADUserInfo`, `Get-ADGroupMembers`, `Test-ADConnection`) and `PersonalUtils` (`Get-SystemInfo`, `Start-ElevatedProcess`, `Test-Port`).
 
-```powershell
-Use-ServiceAccount                    # Retrieves token from 1Password vault
-Use-ServiceAccount -Token "ops_..."   # Uses provided token directly
-```
-
-Without `-Token`, the token is read from the 1Password reference in the `PSPROFILE_OP_SERVICE_TOKEN_REF` environment variable. Set it once per machine (for example in your user environment variables) to the full `op://<vault>/<item>/credential` reference of your service account token. The reference isn't stored in this repo; if the variable is unset, `Use-ServiceAccount` stops with a message saying so.
-
-### `Use-RegularAccount`
-Switches back to regular 1Password user authentication for interactive use.
-
-```powershell
-Use-RegularAccount           # Switch to regular user mode
-Use-RegularAccount -Verify   # Switch and verify authentication status
-```
-
-### `Get-1PasswordMode`
-Shows current 1Password CLI authentication mode and provides guidance.
-
-```powershell
-Get-1PasswordMode
-```
-
-**Example output:**
-```
-🔍 1Password CLI Status
-=====================
-👤 Mode: Regular User
-💡 Switch to service: Use-ServiceAccount
-```
+> **Removed in 2.0.0:** `Use-ServiceAccount`, `Use-RegularAccount` and `Get-1PasswordMode`, and the `PSPROFILE_OP_SERVICE_TOKEN_REF` variable. Resolve credentials with `op-secret` instead.
 
 ## 📖 Reference
 
@@ -181,31 +151,10 @@ gh attestation verify PSProfile.ps1 --repo J-MaFf/powershell-profile-system `
     --signer-workflow J-MaFf/release-kit/.github/workflows/release.yml
 ```
 
-## 🎯 Use Cases
-
-### Development Workflow
-```powershell
-# Start with regular user mode for interactive work
-Get-1PasswordMode
-Use-RegularAccount -Verify
-
-# Switch to service account for automation
-Use-ServiceAccount
-# Now op commands work in automation context
-```
-
-### CI/CD Integration
-```powershell
-# In CI/CD pipelines
-Use-ServiceAccount -Token $env:OP_SERVICE_ACCOUNT_TOKEN
-# Automation-ready 1Password CLI
-```
-
 ## 🛠️ Requirements
 
 - **PowerShell 5.1+** or **PowerShell 7+**
 - **Git** only for a `-Git` install
-- **1Password CLI** (optional, for 1Password functions)
 - **Internet connection** (for initial setup and updates)
 
 ## 🧠 Memory MCP Server Setup
@@ -250,9 +199,6 @@ The profile automatically detects VS Code and uses silent loading to prevent ext
 
 ### Update Check Failed
 A line like `Profile system: update check failed (...)` means it could not reach GitHub or a download did not match the manifest. Your installed files are untouched; it tries again the next day, or run `Update-ProfileSystem.ps1 -Force`.
-
-### 1Password CLI Not Found
-The functions will display helpful error messages if 1Password CLI is not installed.
 
 ### Profile Not Loading
 Check that the installation exists:
