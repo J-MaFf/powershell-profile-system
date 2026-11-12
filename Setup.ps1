@@ -151,7 +151,6 @@ if (Test-Path "`$ProfileRepo\PSProfile.ps1") {
     Write-Host ''
     Write-Host 'Next steps:' -ForegroundColor Cyan
     Write-Host '  - Restart PowerShell to load the new profile' -ForegroundColor Yellow
-    Write-Host '  - Test with: Get-1PasswordMode' -ForegroundColor Yellow
 
 } catch {
     Write-Host "Setup failed: $($_.Exception.Message)" -ForegroundColor Red
