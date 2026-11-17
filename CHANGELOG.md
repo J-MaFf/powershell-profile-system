@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- Adopted beads (bd) for AI task tracking: Dolt-only sync, CLAUDE.md/AGENTS.md guidance, `bd prime` hooks ([#28](https://github.com/J-MaFf/powershell-profile-system/pull/28))
+
 ## [1.1.0] - 2026-11-12
 
 ### Removed
