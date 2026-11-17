@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "powershell_profile_system",
+  "project_id": "cc150e78-b16c-482f-8054-228e83602f55"
+}
